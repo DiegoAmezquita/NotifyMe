@@ -38,13 +38,8 @@ public class MainActivity extends SherlockFragmentActivity {
 		mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 
 
-		mTabsAdapter.addTab(
-				mTabHost.newTabSpec("throttle").setIndicator("Throttle"),
-				ThrottledLoaderListFragment.class, null);
+		mTabsAdapter.addTab(mTabHost.newTabSpec("nots").setIndicator("Nots"),NotsFragment.class, null);
 
-		mTabsAdapter.addTab(
-				mTabHost.newTabSpec("throttle").setIndicator("Throttle"),
-				ThrottledLoaderListFragment.class, null);
 
 		if (savedInstanceState != null) {
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));

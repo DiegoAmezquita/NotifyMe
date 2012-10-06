@@ -1,11 +1,9 @@
 package com.pigsoftware.notifyme;
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
@@ -13,12 +11,11 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.sample.fragments.LoaderThrottleSupport.MainTable;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class ThrottledLoaderListFragment extends SherlockListFragment {
+public class NotsFragment extends SherlockListFragment {
 
 	// Menu identifiers
 	static final int POPULATE_ID = Menu.FIRST;
@@ -40,19 +37,23 @@ public class ThrottledLoaderListFragment extends SherlockListFragment {
 		setEmptyText("No data.  Select 'Populate' to fill with data from Z to A at a rate of 4 per second.");
 		setHasOptionsMenu(true);
 
+		String[] values = new String[] { "Check the newspaper", "Check the newspaper", "Check the newspaper",
+				  "Check the newspaper", "Check the newspaper", "Check the newspaper", "Check the newspaper", "Check the newspaper",
+				  "Check the newspaper", "Check the newspaper" };
+		
 		// Create an empty adapter we will use to display the loaded data.
-		mAdapter = new SimpleCursorAdapter(getActivity(),
-				android.R.layout.simple_list_item_1, null,
-				new String[] { MainTable.COLUMN_NAME_DATA },
-				new int[] { android.R.id.text1 }, 0);
-		setListAdapter(mAdapter);
+		MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(this.getSherlockActivity(),
+				  values);
+
+				// Assign adapter to ListView
+				setListAdapter(adapter); 
+				
+				
+		
 
 		// Start out with a progress indicator.
-		setListShown(false);
+		setListShown(true);
 
-		// Prepare the loader. Either re-connect with an existing one,
-		// or start a new one.
-		// getLoaderManager().initLoader(0, null, this);
 	}
 
 	@Override
@@ -65,51 +66,14 @@ public class ThrottledLoaderListFragment extends SherlockListFragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		final ContentResolver cr = getActivity().getContentResolver();
 
 		switch (item.getItemId()) {
 		case POPULATE_ID:
-			if (mPopulatingTask != null) {
-				mPopulatingTask.cancel(false);
-			}
-			mPopulatingTask = new AsyncTask<Void, Void, Void>() {
-				@Override
-				protected Void doInBackground(Void... params) {
-					for (char c = 'Z'; c >= 'A'; c--) {
-						if (isCancelled()) {
-							break;
-						}
-						StringBuilder builder = new StringBuilder("Data ");
-						builder.append(c);
-						ContentValues values = new ContentValues();
-						values.put(MainTable.COLUMN_NAME_DATA,
-								builder.toString());
-						cr.insert(MainTable.CONTENT_URI, values);
-						// Wait a bit between each insert.
-						try {
-							Thread.sleep(250);
-						} catch (InterruptedException e) {
-						}
-					}
-					return null;
-				}
-			};
-			mPopulatingTask.execute((Void[]) null);
+		
 			return true;
 
 		case CLEAR_ID:
-			if (mPopulatingTask != null) {
-				mPopulatingTask.cancel(false);
-				mPopulatingTask = null;
-			}
-			AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-				@Override
-				protected Void doInBackground(Void... params) {
-					cr.delete(MainTable.CONTENT_URI, null, null);
-					return null;
-				}
-			};
-			task.execute((Void[]) null);
+			
 			return true;
 
 		default:
@@ -124,15 +88,7 @@ public class ThrottledLoaderListFragment extends SherlockListFragment {
 	}
 
 	// These are the rows that we will retrieve.
-	static final String[] PROJECTION = new String[] { MainTable._ID,
-			MainTable.COLUMN_NAME_DATA, };
-
-	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		CursorLoader cl = new CursorLoader(getActivity(),
-				MainTable.CONTENT_URI, PROJECTION, null, null, null);
-		cl.setUpdateThrottle(2000); // update at most every 2 seconds.
-		return cl;
-	}
+	
 
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 		mAdapter.swapCursor(data);
