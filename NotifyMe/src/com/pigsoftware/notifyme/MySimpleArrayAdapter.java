@@ -24,9 +24,13 @@ public class MySimpleArrayAdapter extends ArrayAdapter<String> {
     View rowView = inflater.inflate(R.layout.rowlayout, parent, false);
     TextView textView = (TextView) rowView.findViewById(R.id.label);
     TextView textView1 = (TextView) rowView.findViewById(R.id.label1);
+    TextView textView2 = (TextView) rowView.findViewById(R.id.labelTime);
+    
+    
     ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-    textView.setText("Not #"+position);
+    textView.setText("Not #"+(position+1));
     textView1.setText(values[position]);
+    textView2.setText("12:43");
     // Change the icon for Windows and iPhone
      imageView.setImageResource(R.drawable.ic_launcher);
 
