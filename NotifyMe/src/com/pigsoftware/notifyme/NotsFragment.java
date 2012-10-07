@@ -1,6 +1,5 @@
 package com.pigsoftware.notifyme;
 
-import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,19 +36,19 @@ public class NotsFragment extends SherlockListFragment {
 		setEmptyText("No data.  Select 'Populate' to fill with data from Z to A at a rate of 4 per second.");
 		setHasOptionsMenu(true);
 
-		String[] values = new String[] { "Check the newspaper", "Check the newspaper", "Check the newspaper",
-				  "Check the newspaper", "Check the newspaper", "Check the newspaper", "Check the newspaper", "Check the newspaper",
-				  "Check the newspaper", "Check the newspaper" };
-		
-		// Create an empty adapter we will use to display the loaded data.
-		MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(this.getSherlockActivity(),
-				  values);
+		String[] values = new String[] { "Check the newspaper",
+				"Check the newspaper", "Check the newspaper",
+				"Check the newspaper", "Check the newspaper",
+				"Check the newspaper", "Check the newspaper",
+				"Check the newspaper", "Check the newspaper",
+				"Check the newspaper" };
 
-				// Assign adapter to ListView
-				setListAdapter(adapter); 
-				
-				
-		
+		// Create an empty adapter we will use to display the loaded data.
+		ArrayAdapterNots adapter = new ArrayAdapterNots(
+				this.getSherlockActivity(), values);
+
+		// Assign adapter to ListView
+		setListAdapter(adapter);
 
 		// Start out with a progress indicator.
 		setListShown(true);
@@ -69,11 +68,11 @@ public class NotsFragment extends SherlockListFragment {
 
 		switch (item.getItemId()) {
 		case POPULATE_ID:
-		
+
 			return true;
 
 		case CLEAR_ID:
-			
+
 			return true;
 
 		default:
@@ -85,10 +84,11 @@ public class NotsFragment extends SherlockListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// Insert desired behavior here.
 		Log.i("NOTTIFYME", "Item clicked: " + id);
+		Log.v("NOTTIFYME", this.getSherlockActivity().getPackageName());
+
 	}
 
 	// These are the rows that we will retrieve.
-	
 
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 		mAdapter.swapCursor(data);

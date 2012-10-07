@@ -41,6 +41,8 @@ public class MainActivity extends SherlockFragmentActivity {
 		mTabsAdapter.addTab(mTabHost.newTabSpec("nots").setIndicator("Nots"),NotsFragment.class, null);
 		mTabsAdapter.addTab(mTabHost.newTabSpec("groups").setIndicator("Groups"),NotsFragment.class, null);
 		mTabsAdapter.addTab(mTabHost.newTabSpec("admin").setIndicator("Admin"),NotsFragment.class, null);
+		
+		
 
 
 		if (savedInstanceState != null) {
