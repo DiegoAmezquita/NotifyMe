@@ -48,10 +48,10 @@
             android:id="@+id/labelTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
             android:gravity="center"
             android:text="@+id/label"
-            android:textSize="15dp"
-            android:layout_marginRight="10dp" >
+            android:textSize="15dp">
         </TextView>
 
         <ImageView

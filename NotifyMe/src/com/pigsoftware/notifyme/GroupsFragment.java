@@ -1,5 +1,6 @@
 package com.pigsoftware.notifyme;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,7 +157,6 @@ public class GroupsFragment extends SherlockFragment implements
 		startActivity(intent);
 
 	}
-
+}
 	// Menu identifiers
 
-}
