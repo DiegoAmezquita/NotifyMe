@@ -21,6 +21,8 @@ public class MainActivity extends SherlockFragmentActivity {
 	TabHost mTabHost;
 	ViewPager mViewPager;
 	TabsAdapter mTabsAdapter;
+	
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 
 		mTabsAdapter.addTab(mTabHost.newTabSpec("nots").setIndicator("Nots"),NotsFragment.class, null);
-		mTabsAdapter.addTab(mTabHost.newTabSpec("groups").setIndicator("Groups"),NotsFragment.class, null);
+		mTabsAdapter.addTab(mTabHost.newTabSpec("groups").setIndicator("Groups"),GroupsFragment.class, null);
 		mTabsAdapter.addTab(mTabHost.newTabSpec("admin").setIndicator("Admin"),NotsFragment.class, null);
 		
 		

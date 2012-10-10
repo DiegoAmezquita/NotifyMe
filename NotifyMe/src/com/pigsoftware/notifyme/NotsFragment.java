@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -19,6 +20,8 @@ public class NotsFragment extends SherlockListFragment {
 	// Menu identifiers
 	static final int POPULATE_ID = Menu.FIRST;
 	static final int CLEAR_ID = Menu.FIRST + 1;
+	
+	ActionMode mMode;
 
 	// This is the Adapter being used to display the list's data.
 	SimpleCursorAdapter mAdapter;
@@ -52,6 +55,7 @@ public class NotsFragment extends SherlockListFragment {
 
 		// Start out with a progress indicator.
 		setListShown(true);
+		 
 
 	}
 
@@ -68,7 +72,7 @@ public class NotsFragment extends SherlockListFragment {
 
 		switch (item.getItemId()) {
 		case POPULATE_ID:
-
+			
 			return true;
 
 		case CLEAR_ID:
@@ -85,6 +89,7 @@ public class NotsFragment extends SherlockListFragment {
 		// Insert desired behavior here.
 		Log.i("NOTTIFYME", "Item clicked: " + id);
 		Log.v("NOTTIFYME", this.getSherlockActivity().getPackageName());
+		mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
 
 	}
 
@@ -104,4 +109,57 @@ public class NotsFragment extends SherlockListFragment {
 	public void onLoaderReset(Loader<Cursor> loader) {
 		mAdapter.swapCursor(null);
 	}
+	
+	
+	
+	private final class AnActionModeOfEpicProportions implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            //Used to put dark icons on light action bar
+            boolean isLight = true;
+
+            menu.add("Save")
+                .setIcon(isLight ? R.drawable.ic_compose_inverse : R.drawable.ic_compose)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+            menu.add("Search")
+                .setIcon(isLight ? R.drawable.ic_search_inverse : R.drawable.ic_search)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+            menu.add("Refresh")
+                .setIcon(isLight ? R.drawable.ic_refresh_inverse : R.drawable.ic_refresh)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+            menu.add("Save")
+                .setIcon(isLight ? R.drawable.ic_compose_inverse : R.drawable.ic_compose)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+            menu.add("Search")
+                .setIcon(isLight ? R.drawable.ic_search_inverse : R.drawable.ic_search)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+            menu.add("Refresh")
+                .setIcon(isLight ? R.drawable.ic_refresh_inverse : R.drawable.ic_refresh)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            //Toast.makeText(ActionModes.this, "Got click: " + item, Toast.LENGTH_SHORT).show();
+            mode.finish();
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+        }
+    }
+	
 }
