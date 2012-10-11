@@ -153,7 +153,7 @@ public class GroupsFragment extends SherlockFragment implements
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		Intent intent = new Intent(getSherlockActivity(), LoginActivity.class);
+		Intent intent = new Intent(getSherlockActivity(), GroupActivity.class);
 		startActivity(intent);
 
 	}
