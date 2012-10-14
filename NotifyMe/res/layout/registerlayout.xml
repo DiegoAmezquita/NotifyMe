@@ -31,13 +31,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="text" />
+        android:text = "admin"
+        android:inputType="text"
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/passwordLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/password"
+        android:text="@string/repeatPassword"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -45,7 +47,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPassword" >
+         android:text = "admin"
+        android:inputType="textPassword"
+        android:gravity="center" >
+        <requestFocus />
+    </EditText>
+        
+     <TextView
+        android:id="@+id/repeatPasswordLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/password"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/repeatPasswordField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text = "admin"
+        android:inputType="textPassword"
+        android:gravity="center" >
 
         <requestFocus />
     </EditText>
@@ -61,6 +83,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="61dp"
-        android:text="@string/login" />
+        android:text="@string/signup" />
 
 </LinearLayout>

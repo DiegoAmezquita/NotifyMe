@@ -7,32 +7,46 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="15" />
 
+    <uses-permission android:name="android.permission.INTERNET" /> 
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Sherlock.Light" >
+        android:theme="@style/Theme.Sherlock.Light">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-         <activity
+        <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
+            android:label="@string/title_activity_main"
+             android:screenOrientation="portrait" >
         </activity>
-        
-          <activity
+        <activity
             android:name=".GroupActivity"
             android:label="@string/title_activity_main" >
-            
         </activity>
-        
-         
+        <activity
+            android:name=".AddGroupFragment"
+            android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name=".NewGroupFragment"
+            android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name=".NewNotFragment"
+            android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name=".SignUpActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
     </application>
 
 </manifest>

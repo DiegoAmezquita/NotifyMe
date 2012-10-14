@@ -1,8 +1,13 @@
 package com.pigsoftware.notifyme;
 
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,10 +26,10 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
-
-
 public class GroupsFragment extends SherlockFragment implements
-		OnItemClickListener {
+		OnItemClickListener, Callback {
+	
+	ArrayList<String> popups;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -36,6 +41,13 @@ public class GroupsFragment extends SherlockFragment implements
 		// Instance of ImageAdapter Class
 		gridView.setAdapter(new GridAdapter(getActivity()));
 		gridView.setOnItemClickListener(this);
+
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("method", "getGroups"));
+
+		Server server = new Server(this, nameValuePairs);
+		server.execute(new String[] {});
+
 	}
 
 	@Override
@@ -56,10 +68,28 @@ public class GroupsFragment extends SherlockFragment implements
 
 	public ArrayList<String> loadImagesPopup() {
 		ArrayList<String> tempo = new ArrayList<String>();
-		
-						tempo.add("DIEGO");
-				
+
+		tempo.add("DIEGO");
+
 		return tempo;
+	}
+	
+	
+	public void fillAdapter(String result) {
+		JSONArray jArray;
+		try {
+			jArray = new JSONArray(result);
+			if (jArray.length() > 0) {				
+				popups = new ArrayList<String>();
+				for (int i = 0; i < jArray.length(); i++) {
+					JSONObject json_data = jArray.getJSONObject(i);
+					popups.add(json_data.getString("GROUP_NAME"));
+				}	
+			}
+		} catch (JSONException e) {
+
+			e.printStackTrace();
+		}
 	}
 
 	public class GridAdapter extends BaseAdapter {
@@ -67,44 +97,13 @@ public class GroupsFragment extends SherlockFragment implements
 
 		// Keep all Images in array
 
-		ArrayList<String> popups;
+		
 
 		// Constructor
 		public GridAdapter(Context c) {
-			Log.v("GROUPS","ACA");
-			popups = new ArrayList<String>();
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
-			popups.add("DIEGO");
+			if(popups==null){
+				popups = new ArrayList<String>();
+			}
 			mContext = c;
 
 		}
@@ -130,22 +129,20 @@ public class GroupsFragment extends SherlockFragment implements
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View view = layoutInflater.inflate(R.layout.gridview_item_layout,
 					null);
-			Log.v("GROUPS", "CARGA UNA IMAGEN");
 			ImageView imageView = (ImageView) view
 					.findViewById(R.id.imageView1);
 
 			try {
-				
-					imageView.setImageDrawable(new BitmapDrawable(
-							getResources().getAssets().open("ic_launcher.png")));
-				
+
+				imageView.setImageDrawable(new BitmapDrawable(getResources()
+						.getAssets().open("ic_launcher.png")));
 
 			} catch (Exception e) {
 
 			}
 			TextView nameTextView = (TextView) view
 					.findViewById(R.id.posterNameTextView);
-			nameTextView.setText("PRUEBA");
+			nameTextView.setText(popups.get(position));
 			return view;
 		}
 
@@ -157,6 +154,12 @@ public class GroupsFragment extends SherlockFragment implements
 		startActivity(intent);
 
 	}
+
+	@Override
+	public void callback(String result) {
+		fillAdapter(result);
+
+	}
 }
-	// Menu identifiers
+// Menu identifiers
 

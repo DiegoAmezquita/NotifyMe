@@ -51,6 +51,8 @@ public class AdminFragment extends SherlockFragment{
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(getSherlockActivity(), "Add Group", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(getSherlockActivity(), AddGroupFragment.class);
+				startActivity(intent);
 				
 			}
 		});
@@ -61,7 +63,8 @@ public class AdminFragment extends SherlockFragment{
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(getSherlockActivity(), "Remove Group", Toast.LENGTH_SHORT).show();
-				
+				Intent intent = new Intent(getSherlockActivity(), NewNotFragment.class);
+				startActivity(intent);
 			}
 		});
 		
