@@ -45,7 +45,7 @@ public class AdminFragment extends SherlockFragment{
 
 		View view = inflater.inflate(R.layout.admin_layout, null);
 			
-		ImageView imageView1 = (ImageView)view.findViewById(R.id.imageView1);
+		ImageView imageView1 = (ImageView)view.findViewById(R.id.add);
 		imageView1.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -57,7 +57,7 @@ public class AdminFragment extends SherlockFragment{
 			}
 		});
 		
-		ImageView imageView2 = (ImageView)view.findViewById(R.id.imageView2);
+		ImageView imageView2 = (ImageView)view.findViewById(R.id.remove);
 		imageView2.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -68,7 +68,7 @@ public class AdminFragment extends SherlockFragment{
 			}
 		});
 		
-		ImageView imageView3 = (ImageView)view.findViewById(R.id.imageView3);
+		ImageView imageView3 = (ImageView)view.findViewById(R.id.pause);
 		imageView3.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -78,7 +78,7 @@ public class AdminFragment extends SherlockFragment{
 			}
 		});
 		
-		ImageView imageView4 = (ImageView)view.findViewById(R.id.imageView4);
+		ImageView imageView4 = (ImageView)view.findViewById(R.id.help);
 		imageView4.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -88,7 +88,7 @@ public class AdminFragment extends SherlockFragment{
 			}
 		});
 		
-		ImageView imageView5 = (ImageView)view.findViewById(R.id.imageView5);
+		ImageView imageView5 = (ImageView)view.findViewById(R.id.rate);
 		imageView5.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -98,7 +98,7 @@ public class AdminFragment extends SherlockFragment{
 			}
 		});
 		
-		ImageView imageView6 = (ImageView)view.findViewById(R.id.imageView6);
+		ImageView imageView6 = (ImageView)view.findViewById(R.id.feedback);
 		imageView6.setOnClickListener(new OnClickListener() {
 			
 			@Override

@@ -1,5 +1,13 @@
 package com.pigsoftware.notifyme;
 
+import java.util.ArrayList;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,7 +23,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class NotsFragment extends SherlockListFragment {
+public class NotsFragment extends SherlockListFragment implements Callback{
 
 	// Menu identifiers
 	static final int POPULATE_ID = Menu.FIRST;
@@ -39,12 +47,32 @@ public class NotsFragment extends SherlockListFragment {
 		setEmptyText("No data.  Select 'Populate' to fill with data from Z to A at a rate of 4 per second.");
 		setHasOptionsMenu(true);
 
-		String[] values = new String[] { "Check the newspaper",
-				"Check the newspaper", "Check the newspaper",
-				"Check the newspaper", "Check the newspaper",
-				"Check the newspaper", "Check the newspaper",
-				"Check the newspaper", "Check the newspaper",
-				"Check the newspaper" };
+		
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("method", "getNots"));
+		Server server = new Server(this, nameValuePairs);
+		server.execute(new String[] {});
+		
+		
+		 
+
+	}
+	
+	public void loadNots(String result){
+		JSONArray jArray;
+		String[] values= null;
+		try {
+			jArray = new JSONArray(result);
+			if (jArray.length() > 0) {
+				values = new String[jArray.length()];
+				for (int i = 0; i < jArray.length(); i++) {
+					JSONObject json_data = jArray.getJSONObject(i);
+					values[i]=json_data.getString("NOTIFICATION_MESSAGE");
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}	
 
 		// Create an empty adapter we will use to display the loaded data.
 		ArrayAdapterNots adapter = new ArrayAdapterNots(
@@ -55,8 +83,6 @@ public class NotsFragment extends SherlockListFragment {
 
 		// Start out with a progress indicator.
 		setListShown(true);
-		 
-
 	}
 
 	@Override
@@ -161,5 +187,13 @@ public class NotsFragment extends SherlockListFragment {
         public void onDestroyActionMode(ActionMode mode) {
         }
     }
+
+
+
+	@Override
+	public void callback(String result) {
+		loadNots(result);
+		
+	}
 	
 }

@@ -1,7 +1,9 @@
 package com.pigsoftware.notifyme;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -11,7 +13,9 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,26 +32,52 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class GroupsFragment extends SherlockFragment implements
 		OnItemClickListener, Callback {
-	
+
 	ArrayList<String> popups;
+	ArrayList<Bitmap> arrayBImage;
+	int countImagesLoaded = 0;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
+		arrayBImage = new ArrayList<Bitmap>();
 		setHasOptionsMenu(true);
-		GridView gridView = (GridView) getView().findViewById(R.id.grid_view);
-
-		// Instance of ImageAdapter Class
-		gridView.setAdapter(new GridAdapter(getActivity()));
-		gridView.setOnItemClickListener(this);
 
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair("method", "getGroups"));
-
 		Server server = new Server(this, nameValuePairs);
 		server.execute(new String[] {});
+		// Instance of ImageAdapter Class
 
+	}
+
+	public void imageLoadFinish() {
+		countImagesLoaded++;
+		Log.v("NOTIFYME", "" + countImagesLoaded);
+		if (popups.size() == countImagesLoaded) {
+			GridView gridView = (GridView) getView().findViewById(
+					R.id.grid_view);
+			gridView.setAdapter(new GridAdapter(getActivity()));
+			gridView.setOnItemClickListener(this);
+		}
+	}
+
+	public void fillAdapter(String result) {
+		JSONArray jArray;
+		try {
+			jArray = new JSONArray(result);
+			if (jArray.length() > 0) {
+				popups = new ArrayList<String>();
+				for (int i = 0; i < jArray.length(); i++) {
+					JSONObject json_data = jArray.getJSONObject(i);
+					popups.add(json_data.getString("GROUP_NAME"));
+					ImageServer ss = new ImageServer(this,Utils.HOST_ROOT+"group"+popups.size()+".jpg");
+					ss.execute(new String[] {});
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -73,35 +103,15 @@ public class GroupsFragment extends SherlockFragment implements
 
 		return tempo;
 	}
-	
-	
-	public void fillAdapter(String result) {
-		JSONArray jArray;
-		try {
-			jArray = new JSONArray(result);
-			if (jArray.length() > 0) {				
-				popups = new ArrayList<String>();
-				for (int i = 0; i < jArray.length(); i++) {
-					JSONObject json_data = jArray.getJSONObject(i);
-					popups.add(json_data.getString("GROUP_NAME"));
-				}	
-			}
-		} catch (JSONException e) {
-
-			e.printStackTrace();
-		}
-	}
 
 	public class GridAdapter extends BaseAdapter {
 		private Context mContext;
 
 		// Keep all Images in array
 
-		
-
 		// Constructor
 		public GridAdapter(Context c) {
-			if(popups==null){
+			if (popups == null) {
 				popups = new ArrayList<String>();
 			}
 			mContext = c;
@@ -110,6 +120,7 @@ public class GroupsFragment extends SherlockFragment implements
 
 		@Override
 		public int getCount() {
+			Log.v("TAG", "TAMAÑO " + popups.size());
 			return popups.size();
 		}
 
@@ -125,6 +136,7 @@ public class GroupsFragment extends SherlockFragment implements
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			Log.v("TAG", "ENTRA ACA");
 			LayoutInflater layoutInflater = (LayoutInflater) mContext
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View view = layoutInflater.inflate(R.layout.gridview_item_layout,
@@ -133,12 +145,13 @@ public class GroupsFragment extends SherlockFragment implements
 					.findViewById(R.id.imageView1);
 
 			try {
-
-				imageView.setImageDrawable(new BitmapDrawable(getResources()
-						.getAssets().open("ic_launcher.png")));
+				Log.v("TAG", "BITMAP");
+				imageView.setImageBitmap(arrayBImage.get(position));
+				// imageView.setImageDrawable(new BitmapDrawable(getResources()
+				// .getAssets().open("ic_launcher.png")));
 
 			} catch (Exception e) {
-
+				Log.v("TAG", "FALLO CON LA IMAGEN " + e.getMessage());
 			}
 			TextView nameTextView = (TextView) view
 					.findViewById(R.id.posterNameTextView);
@@ -146,6 +159,50 @@ public class GroupsFragment extends SherlockFragment implements
 			return view;
 		}
 
+	}
+
+	public class ImageServer extends AsyncTask<String, Void, String> {
+
+		Callback classToCall;
+		Bitmap tempo;
+		String url;
+
+		public ImageServer(Callback classToCall,String url) {
+			this.classToCall = classToCall;
+			this.url=url;
+		}
+
+		@Override
+		protected String doInBackground(String... urls) {
+			String result = "";
+			// http post
+			try {
+				Log.e("src", url);
+				URL urlImage = new URL(url);
+				HttpURLConnection connection = (HttpURLConnection) urlImage
+						.openConnection();
+				connection.setDoInput(true);
+				connection.connect();
+				InputStream input = connection.getInputStream();
+				Bitmap myBitmap = BitmapFactory.decodeStream(input);
+				Log.e("Bitmap", "returned");
+				tempo = myBitmap;
+			} catch (Exception e) {
+				e.printStackTrace();
+				Log.v("Exception", e.getMessage());
+				return null;
+			}
+
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			Log.v("TAG", result);
+			arrayBImage.add(tempo);
+			imageLoadFinish();
+			// classToCall.callback(result);
+		}
 	}
 
 	@Override

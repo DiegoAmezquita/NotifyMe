@@ -31,8 +31,7 @@ public class ArrayAdapterNots extends ArrayAdapter<String> {
     textView.setText("Not #"+(position+1));
     textView1.setText(values[position]);
     textView2.setText("12:43");
-    // Change the icon for Windows and iPhone
-     imageView.setImageResource(R.drawable.ic_launcher);
+    imageView.setImageResource(R.drawable.max);
 
     return rowView;
   }

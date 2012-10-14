@@ -13,14 +13,14 @@
         android:id="@+id/textViewFrom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Large Text"
+        android:text="@string/app_name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
     <TextView
         android:id="@+id/textViewFrom1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Large Text"
+      android:text="@string/app_name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
     </LinearLayout>
@@ -34,14 +34,14 @@
         android:id="@+id/textViewDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Large Text"
+       android:text="@string/app_name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
     <TextView
         android:id="@+id/textViewDate1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Large Text"
+       android:text="@string/app_name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
     
@@ -51,7 +51,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Large Text"
+       android:text="@string/app_name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </LinearLayout>
