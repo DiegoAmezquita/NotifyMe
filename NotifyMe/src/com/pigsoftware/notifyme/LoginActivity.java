@@ -10,6 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.TrafficStats;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -80,8 +82,7 @@ public class LoginActivity extends SherlockFragmentActivity implements Callback{
 				}else{
 					Utils.USER_ID = json_data.getString("USER_ID");
 					Log.v(TAG,Utils.USER_ID);
-					Intent intent = new Intent(this, MainActivity.class);
-					startActivity(intent);
+					waitDataServer();
 				}
 			} else {
 				Toast.makeText(this, "Incorrect", Toast.LENGTH_SHORT).show();
@@ -91,6 +92,32 @@ public class LoginActivity extends SherlockFragmentActivity implements Callback{
 			
 			e.printStackTrace();
 		}
+	}
+	
+	public void waitDataServer(){
+		new LoadGroups();
+		new LoadNots();
+		Thread threadWaitFillData = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				while(true){
+					if(Utils.GROUPS!=null&&Utils.NOTS!=null){						
+						startMainActivity();
+						break;
+					}else{
+						Log.v("NOTIFYME","WAITING...");
+					}
+				}				
+			}
+		});
+		
+		threadWaitFillData.start();
+	}
+	
+	public void startMainActivity(){
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
 	}
 
 	
@@ -112,9 +139,11 @@ public class LoginActivity extends SherlockFragmentActivity implements Callback{
 	}
 
 	@Override
-	public void callback(String result) {
-		Log.v(TAG,"EN EL CALLBACK DE LOGIN "+result);
+	public void callback(String result,boolean image,Bitmap bitmap) {
 		login(result);
+		
+		
+		
 		
 	}
 

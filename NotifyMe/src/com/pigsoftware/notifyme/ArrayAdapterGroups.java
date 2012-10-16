@@ -27,7 +27,7 @@ public class ArrayAdapterGroups extends ArrayAdapter<String> {
     TextView textView2 = (TextView) rowView.findViewById(R.id.labelTime);
     
     
-    ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+    ImageView imageView = (ImageView) rowView.findViewById(R.id.imageIcon);
     textView.setText("Not #"+(position+1));
     textView1.setText(values[position]);
     textView2.setText("12:43");

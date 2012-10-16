@@ -5,18 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -29,41 +26,27 @@ public class GroupActivity extends SherlockListActivity implements Callback {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Intent intent = getIntent();
-		String path = intent.getStringExtra("com.example.android.apis.Path");
-
-		if (path == null) {
-			path = "";
-		}
-		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair("method", "getGroups"));
+		Intent myIntent= getIntent(); 
+		String GROUP_ID = myIntent.getStringExtra("GROUP_ID"); 
+		String GROUP_NAME = myIntent.getStringExtra("GROUP_NAME");
 		
-		Server server = new Server(this,nameValuePairs);
-		server.execute(new String[]{});
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setTitle(GROUP_NAME);
+		
+		Notification groupsNots[] = Utils.getNotsFromGroup(GROUP_ID);
+		
+		
+		
+		ArrayAdapterNots adapter = new ArrayAdapterNots(this,groupsNots );
+		setListAdapter(adapter);
+		
+
+		
 		
 
 	}
 
-	public void fillAdapter(String result) {
-		JSONArray jArray;
-		try {
-			jArray = new JSONArray(result);
-			if (jArray.length() > 0) {				
-				String[] values = new String[jArray.length()];
-			
-				for (int i = 0; i < jArray.length(); i++) {
-					JSONObject json_data = jArray.getJSONObject(i);
-					values[i]= json_data.getString("GROUP_NAME");
-				}		 
-
-			ArrayAdapterNots adapter = new ArrayAdapterNots(this, values);
-			setListAdapter(adapter);
-			}
-		} catch (JSONException e) {
-
-			e.printStackTrace();
-		}
-	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -110,8 +93,7 @@ public class GroupActivity extends SherlockListActivity implements Callback {
 	}
 
 	@Override
-	public void callback(String result) {
-		fillAdapter(result);
+	public void callback(String result,boolean image,Bitmap bitmap) {
 
 	}
 }

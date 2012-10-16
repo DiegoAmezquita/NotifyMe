@@ -60,7 +60,7 @@ public class Server extends AsyncTask<String, Void, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		Log.v("TAG", result);
-		classToCall.callback(result);
+//		Log.v("TAG", result);
+		classToCall.callback(result,false,null);
 	}
 }

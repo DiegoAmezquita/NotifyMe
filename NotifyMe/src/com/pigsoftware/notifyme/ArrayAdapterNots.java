@@ -7,11 +7,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ArrayAdapterNots extends ArrayAdapter<String> {
+public class ArrayAdapterNots extends ArrayAdapter<Notification> {
   private final Context context;
-  private final String[] values;
+  private final Notification[] values;
 
-  public ArrayAdapterNots(Context context, String[] values) {
+  public ArrayAdapterNots(Context context, Notification[] values) {
     super(context, R.layout.rowlayout, values);
     this.context = context;
     this.values = values;
@@ -27,11 +27,12 @@ public class ArrayAdapterNots extends ArrayAdapter<String> {
     TextView textView2 = (TextView) rowView.findViewById(R.id.labelTime);
     
     
-    ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-    textView.setText("Not #"+(position+1));
-    textView1.setText(values[position]);
-    textView2.setText("12:43");
-    imageView.setImageResource(R.drawable.max);
+    
+    textView.setText(values[position].NOTIFICATION_TITLE);
+    textView1.setText(values[position].NOTIFICATION_MESSAGE);
+    textView2.setText(values[position].NOTIFICATION_TIME);
+    ImageView imageView = (ImageView) rowView.findViewById(R.id.imageGroup);
+    imageView.setImageBitmap(Utils.getGroup(values[position].GROUP_ID).GROUP_IMAGE);
 
     return rowView;
   }

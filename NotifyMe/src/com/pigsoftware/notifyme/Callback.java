@@ -1,10 +1,10 @@
 package com.pigsoftware.notifyme;
 
+import android.graphics.Bitmap;
+
 
 
 public interface Callback
 {
-    // This is just a regular method so it can return something or
-    // take arguments if you like.
-    public void callback (String result);
+    public void callback (String result,boolean Image,Bitmap bitmap);
 }

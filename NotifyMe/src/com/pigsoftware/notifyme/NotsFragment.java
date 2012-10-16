@@ -2,14 +2,9 @@ package com.pigsoftware.notifyme;
 
 import java.util.ArrayList;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.database.Cursor;
-import android.os.AsyncTask;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -29,6 +24,11 @@ public class NotsFragment extends SherlockListFragment implements Callback{
 	static final int POPULATE_ID = Menu.FIRST;
 	static final int CLEAR_ID = Menu.FIRST + 1;
 	
+	ArrayList<Bitmap> arrayBImage;
+	int countImagesLoaded = 0;
+	ArrayList<Bitmap> arrayGroupImage;
+	int countImagesGroupLoaded = 0;
+	
 	ActionMode mMode;
 
 	// This is the Adapter being used to display the list's data.
@@ -37,53 +37,25 @@ public class NotsFragment extends SherlockListFragment implements Callback{
 	// If non-null, this is the current filter the user has provided.
 	String mCurFilter;
 
-	// Task we have running to populate the database.
-	AsyncTask<Void, Void, Void> mPopulatingTask;
+	
+	Notification[] values= null;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		arrayBImage = new ArrayList<Bitmap>();
+		
 		setEmptyText("No data.  Select 'Populate' to fill with data from Z to A at a rate of 4 per second.");
 		setHasOptionsMenu(true);
 
-		
-		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair("method", "getNots"));
-		Server server = new Server(this, nameValuePairs);
-		server.execute(new String[] {});
-		
-		
-		 
+		ArrayAdapterNots adapter = new ArrayAdapterNots(this.getSherlockActivity(), Utils.NOTS);
+		setListAdapter(adapter);
+		setListShown(true);	
 
 	}
 	
-	public void loadNots(String result){
-		JSONArray jArray;
-		String[] values= null;
-		try {
-			jArray = new JSONArray(result);
-			if (jArray.length() > 0) {
-				values = new String[jArray.length()];
-				for (int i = 0; i < jArray.length(); i++) {
-					JSONObject json_data = jArray.getJSONObject(i);
-					values[i]=json_data.getString("NOTIFICATION_MESSAGE");
-				}
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}	
-
-		// Create an empty adapter we will use to display the loaded data.
-		ArrayAdapterNots adapter = new ArrayAdapterNots(
-				this.getSherlockActivity(), values);
-
-		// Assign adapter to ListView
-		setListAdapter(adapter);
-
-		// Start out with a progress indicator.
-		setListShown(true);
-	}
+	
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -178,7 +150,6 @@ public class NotsFragment extends SherlockListFragment implements Callback{
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            //Toast.makeText(ActionModes.this, "Got click: " + item, Toast.LENGTH_SHORT).show();
             mode.finish();
             return true;
         }
@@ -188,11 +159,13 @@ public class NotsFragment extends SherlockListFragment implements Callback{
         }
     }
 
+	
+	
 
 
 	@Override
-	public void callback(String result) {
-		loadNots(result);
+	public void callback(String result,boolean image,Bitmap bitmap) {
+		
 		
 	}
 	
