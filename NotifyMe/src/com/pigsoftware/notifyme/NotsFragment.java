@@ -29,7 +29,7 @@ public class NotsFragment extends SherlockListFragment implements Callback{
 	ArrayList<Bitmap> arrayGroupImage;
 	int countImagesGroupLoaded = 0;
 	
-	ActionMode mMode;
+	
 
 	// This is the Adapter being used to display the list's data.
 	SimpleCursorAdapter mAdapter;
@@ -59,10 +59,10 @@ public class NotsFragment extends SherlockListFragment implements Callback{
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		MenuItem populateItem = menu.add(Menu.NONE, POPULATE_ID, 0, "Populate");
-		populateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		MenuItem clearItem = menu.add(Menu.NONE, CLEAR_ID, 0, "Clear");
-		clearItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		//MenuItem populateItem = menu.add(Menu.NONE, POPULATE_ID, 0, "Populate");
+		//populateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		//MenuItem clearItem = menu.add(Menu.NONE, CLEAR_ID, 0, "Clear");
+		//clearItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 	}
 
 	@Override
@@ -87,7 +87,9 @@ public class NotsFragment extends SherlockListFragment implements Callback{
 		// Insert desired behavior here.
 		Log.i("NOTTIFYME", "Item clicked: " + id);
 		Log.v("NOTTIFYME", this.getSherlockActivity().getPackageName());
-		mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
+		Utils.mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
+		
+		
 
 	}
 

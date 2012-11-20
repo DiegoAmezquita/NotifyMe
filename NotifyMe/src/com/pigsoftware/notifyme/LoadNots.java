@@ -15,7 +15,6 @@ import android.util.Log;
 public class LoadNots implements Callback {
 
 	Notification nots[];
-	int counter=0;
 	public final static String TAG = "NOTIFYME";
 	
 	public LoadNots() {

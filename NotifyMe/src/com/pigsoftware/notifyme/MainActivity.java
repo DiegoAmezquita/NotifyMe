@@ -1,13 +1,22 @@
 package com.pigsoftware.notifyme;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
@@ -17,12 +26,13 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 
-public class MainActivity extends SherlockFragmentActivity {
+public class MainActivity extends SherlockFragmentActivity implements Callback {
 	TabHost mTabHost;
 	ViewPager mViewPager;
 	TabsAdapter mTabsAdapter;
+	MainActivity main;
 	
-	
+	Notification nots[];
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +41,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setTitle(R.string.app_name);
-		
+
 		mTabHost = (TabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup();
 
@@ -39,13 +49,17 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 
+		mTabsAdapter.addTab(mTabHost.newTabSpec("nots").setIndicator("Nots"),
+				NotsFragment.class, null);
+		mTabsAdapter.addTab(mTabHost.newTabSpec("groups")
+				.setIndicator("Groups"), GroupsFragment.class, null);
+		mTabsAdapter.addTab(mTabHost.newTabSpec("admin").setIndicator("Admin"),
+				AdminFragment.class, null);
 
-		mTabsAdapter.addTab(mTabHost.newTabSpec("nots").setIndicator("Nots"),NotsFragment.class, null);
-		mTabsAdapter.addTab(mTabHost.newTabSpec("groups").setIndicator("Groups"),GroupsFragment.class, null);
-		mTabsAdapter.addTab(mTabHost.newTabSpec("admin").setIndicator("Admin"),AdminFragment.class, null);
-		
-		
+		main = this;
 
+		timer = new Timer();
+		timer.schedule(new secondTask(), 0, 2000);
 
 		if (savedInstanceState != null) {
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
@@ -54,12 +68,12 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
-		/*SubMenu sub = menu.addSubMenu("other");
-		
-		sub.getItem().setShowAsAction(
-				MenuItem.SHOW_AS_ACTION_ALWAYS
-						| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		*/
+		/*
+		 * SubMenu sub = menu.addSubMenu("other");
+		 * 
+		 * sub.getItem().setShowAsAction( MenuItem.SHOW_AS_ACTION_ALWAYS |
+		 * MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		 */
 		return true;
 	}
 
@@ -127,6 +141,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		@Override
 		public Fragment getItem(int position) {
 			TabInfo info = mTabs.get(position);
+
 			return Fragment.instantiate(mContext, info.clss.getName(),
 					info.args);
 		}
@@ -134,6 +149,8 @@ public class MainActivity extends SherlockFragmentActivity {
 		@Override
 		public void onTabChanged(String tabId) {
 			int position = mTabHost.getCurrentTab();
+			if (Utils.mMode != null)
+				Utils.mMode.finish();
 			mViewPager.setCurrentItem(position);
 		}
 
@@ -161,6 +178,71 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 	}
 
-	
+	Timer timer = new Timer();
+
+	long starttime = 0;
+
+	// tells activity to run on ui thread
+	class secondTask extends TimerTask {
+
+		@Override
+		public void run() {
+			main.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					if (starttime == 0) {
+						starttime = System.currentTimeMillis();
+					}
+					long millis = System.currentTimeMillis() - starttime;
+					int seconds = (int) (millis / 1000);
+					int minutes = seconds / 60;
+					seconds = seconds % 60;
+
+					if (!Utils.serverBusy) {
+						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+						nameValuePairs.add(new BasicNameValuePair("method","getLastNots"));
+
+						Server server = new Server(main, nameValuePairs);
+						server.execute(new String[] {});
+					}
+
+					//Log.v("TAG", String.format("%d:%02d", minutes, seconds));
+				}
+			});
+		}
+	}
+
+	@Override
+	public void callback(String result, boolean Image, Bitmap bitmap) {
+		JSONArray jArray;
+		try {
+			jArray = new JSONArray(result);
+			//Log.v("TAG",jArray.length()+" --  "+Utils.NOTS.length);		
+			if (jArray.length() > 0&&jArray.length()>Utils.NOTS.length) {
+				nots = new Notification[jArray.length()];
+				for (int i = 0; i < jArray.length(); i++) {
+					JSONObject json_data = jArray.getJSONObject(i);
+					Notification not = new Notification();
+					not.GROUP_ID = json_data.getString("GROUP_ID");
+					not.NOTIFICATION_DATE = json_data.getString("NOTIFICATION_DATE");
+					not.NOTIFICATION_ID = json_data.getString("NOTIFICATION_ID");
+					not.NOTIFICATION_MESSAGE = json_data.getString("NOTIFICATION_MESSAGE");
+					not.NOTIFICATION_TIME = json_data.getString("NOTIFICATION_TIME");
+					not.NOTIFICATION_TITLE= json_data.getString("NOTIFICATION_TITLE");
+					not.NOTIFICATION_TYPE_ID= json_data.getString("NOTIFICATION_TYPE_ID");						
+					nots[i] = not;	
+					
+				}
+				Utils.NOTS = nots;
+				Log.v("TAG","NUEVA NOTIFICACION");		
+				Utils.createNotificationAndroid(getApplicationContext());
+			}
+		}catch(Exception e){
+			
+		}
+		
+
+	};
 
 }

@@ -30,11 +30,11 @@ public class LoadGroups implements Callback {
 	public void saveGroups(){
 		
 		Utils.GROUPS = groups;
-		
+		Log.v(TAG,"length: "+groups.length);
 		for (int i = 0; i < groups.length; i++) {
-			Log.v(TAG,"NAME: "+groups[i].GROUP_NAME);
-			Log.v(TAG,"BITMAP: "+groups[i].GROUP_IMAGE.toString());
-			Log.v(TAG,"-");
+			//Log.v(TAG,"NAME: "+groups[i].GROUP_NAME);
+			//Log.v(TAG,"BITMAP: "+groups[i].GROUP_IMAGE.toString());
+			//Log.v(TAG,"-");
 		}
 	}
 

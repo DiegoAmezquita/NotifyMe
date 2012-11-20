@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -22,53 +21,51 @@ import com.actionbarsherlock.view.SubMenu;
 public class GroupActivity extends SherlockListActivity implements Callback {
 	public static int THEME = R.style.Theme_Sherlock;
 
+	String GROUP_ID;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Intent myIntent= getIntent(); 
-		String GROUP_ID = myIntent.getStringExtra("GROUP_ID"); 
+		Intent myIntent = getIntent();
+		GROUP_ID = myIntent.getStringExtra("GROUP_ID");
 		String GROUP_NAME = myIntent.getStringExtra("GROUP_NAME");
-		
+
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setTitle(GROUP_NAME);
-		
-		Notification groupsNots[] = Utils.getNotsFromGroup(GROUP_ID);
-		
-		
-		
-		ArrayAdapterNots adapter = new ArrayAdapterNots(this,groupsNots );
-		setListAdapter(adapter);
-		
 
-		
-		
+		Notification groupsNots[] = Utils.getNotsFromGroup(GROUP_ID);
+
+		ArrayAdapterNots adapter = new ArrayAdapterNots(this, groupsNots);
+		setListAdapter(adapter);
 
 	}
 
-	
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		SubMenu sub = menu.addSubMenu("Theme");
-		sub.add(0, R.style.Theme_Sherlock, 0, "Default");
-		sub.add(0, R.style.Theme_Sherlock_Light, 0, "Light");
-		sub.add(0, R.style.Theme_Sherlock_Light_DarkActionBar, 0,
-				"Light (Dark Action Bar)");
-		sub.getItem().setShowAsAction(
-				MenuItem.SHOW_AS_ACTION_ALWAYS
-						| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		/*
+		 * SubMenu sub = menu.addSubMenu("Theme"); sub.add(0,
+		 * R.style.Theme_Sherlock, 0, "Default"); sub.add(0,
+		 * R.style.Theme_Sherlock_Light, 0, "Light"); sub.add(0,
+		 * R.style.Theme_Sherlock_Light_DarkActionBar, 0,
+		 * "Light (Dark Action Bar)"); sub.getItem().setShowAsAction(
+		 * MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		 */
+
+		MenuItem populateItem = menu.add(Menu.NONE, 0, 0, "New");
+		populateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home || item.getItemId() == 0) {
-			return false;
+		if (item.getItemId() == 0) {
+			Intent intent = new Intent(this, NewNotFragment.class);
+			intent.putExtra("GROUP_ID", GROUP_ID);
+			startActivity(intent);
+			finish();
+			Toast.makeText(this, "NUEVO", Toast.LENGTH_SHORT).show();
 		}
-		THEME = item.getItemId();
-		Toast.makeText(this, "Theme changed to \"" + item.getTitle() + "\"",
-				Toast.LENGTH_SHORT).show();
+
 		return true;
 	}
 
@@ -93,7 +90,7 @@ public class GroupActivity extends SherlockListActivity implements Callback {
 	}
 
 	@Override
-	public void callback(String result,boolean image,Bitmap bitmap) {
+	public void callback(String result, boolean image, Bitmap bitmap) {
 
 	}
 }

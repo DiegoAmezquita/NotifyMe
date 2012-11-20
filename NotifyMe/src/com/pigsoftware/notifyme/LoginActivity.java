@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.TrafficStats;
@@ -34,6 +35,7 @@ public class LoginActivity extends SherlockFragmentActivity implements Callback{
 
 	EditText userField;
 	EditText passwordField;
+	ProgressDialog dialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,8 @@ public class LoginActivity extends SherlockFragmentActivity implements Callback{
 
 			}
 		});
+		
+		
 
 	}
 	
@@ -67,11 +71,17 @@ public class LoginActivity extends SherlockFragmentActivity implements Callback{
 		nameValuePairs.add(new BasicNameValuePair("user", userField.getEditableText().toString()));
 		nameValuePairs.add(new BasicNameValuePair("password", passwordField.getEditableText().toString()));
 		
+		dialog = ProgressDialog.show(this, "", 
+                "Loading. Please wait...", true);
+		
+		
 		Server server = new Server(this, nameValuePairs);
 		server.execute(new String[]{});
 	}
 
 	public void login(String result) {
+		Log.v("TAG",result);
+		
 		JSONArray jArray;
 		try {
 			jArray = new JSONArray(result);
@@ -102,7 +112,8 @@ public class LoginActivity extends SherlockFragmentActivity implements Callback{
 			@Override
 			public void run() {
 				while(true){
-					if(Utils.GROUPS!=null&&Utils.NOTS!=null){						
+					if(Utils.GROUPS!=null&&Utils.NOTS!=null){	
+						dialog.dismiss();
 						startMainActivity();
 						break;
 					}else{

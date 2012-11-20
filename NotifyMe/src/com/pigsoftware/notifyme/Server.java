@@ -12,6 +12,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -23,13 +24,16 @@ public class Server extends AsyncTask<String, Void, String> {
 	
 	public Server(Callback classToCall,ArrayList<NameValuePair> nameValuePairs) {
 		this.nameValuePairs = nameValuePairs;
+		if(Utils.USER_ID!=null)
+		Log.v("TAG",Utils.USER_ID);
+		this.nameValuePairs.add(new BasicNameValuePair("user_id", Utils.USER_ID));
 		this.classToCall = classToCall;
 	}
 	
 	
-	
 	@Override
 	protected String doInBackground(String... urls) {
+		Utils.serverBusy = true;
 		String result = "";	
 		// http post
 		try {
@@ -60,6 +64,7 @@ public class Server extends AsyncTask<String, Void, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
+		Utils.serverBusy = false;
 //		Log.v("TAG", result);
 		classToCall.callback(result,false,null);
 	}

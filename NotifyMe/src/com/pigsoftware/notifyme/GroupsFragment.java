@@ -1,6 +1,5 @@
 package com.pigsoftware.notifyme;
 
-import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;

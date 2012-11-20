@@ -8,7 +8,7 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
+
         <TableRow
             android:id="@+id/tableRow1"
             android:layout_width="wrap_content"
@@ -25,9 +25,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:ems="10" />
+                android:ems="10" >
+
+                <requestFocus />
+            </EditText>
         </TableRow>
-
+
         <TableRow
             android:id="@+id/tableRow2"
             android:layout_width="wrap_content"
@@ -46,8 +49,6 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="textMultiLine" >
-
-                <requestFocus />
             </EditText>
         </TableRow>
 
@@ -60,26 +61,21 @@
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/icon"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:text="@string/icon" />
 
-           <Spinner
-        android:id="@+id/spinner1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+            <Spinner
+                android:id="@+id/spinner1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </TableRow>
-
-        
     </TableLayout>
 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create"
-        android:layout_gravity="center" />
-
-    
+        android:layout_gravity="center"
+        android:text="@string/create" />
 
 </LinearLayout>
